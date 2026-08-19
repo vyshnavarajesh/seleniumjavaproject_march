@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="Parallel Test Suite" parallel="methods" thread-count="4">
+    <test name="Parallel Tests">
+    <parameter name="browser" value="chrome" />
+        <classes>
+            <!--class name="com.saucedemo.tests.LoginAuthenticationTests"/-->
+             <class name="com.saucedemo.tests.InventoryTests"/>
+        </classes>
+    </test>
+</suite>
