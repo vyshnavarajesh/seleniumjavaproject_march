@@ -5,7 +5,7 @@ on:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:   # manual trigger
+  workflow_dispatch:
 
 jobs:
   test:
@@ -15,7 +15,6 @@ jobs:
       fail-fast: false
       matrix:
         browser: [chrome, edge]
-        # add firefox later if implemented
 
     steps:
       - name: Checkout code
@@ -35,16 +34,43 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-m2-
 
+      # Only install Edge when the matrix browser is 'edge'
+      - name: Install Microsoft Edge
+        if: matrix.browser == 'edge'
+        run: |
+          curl -sSL https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge.list'
+          sudo apt-get update
+          sudo apt-get install -y microsoft-edge-stable
+
+      # Verify Edge installation (optional)
+      - name: Verify Edge installation
+        if: matrix.browser == 'edge'
+        run: |
+          echo "Edge installed at: $(which microsoft-edge-stable)"
+          microsoft-edge-stable --version
+
       - name: Run tests on ${{ matrix.browser }} (headless)
         run: |
           mvn clean test \
             -Dbrowser=${{ matrix.browser }} \
-            -Dheadless=true
+            -Dheadless=true \
+            -Dedge.binary=$(which microsoft-edge-stable)
         continue-on-error: true
 
-      - name: Upload test reports
+      - name: Upload TestNG reports (surefire)
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports-${{ matrix.browser }}
+          name: surefire-reports-${{ matrix.browser }}
           path: target/surefire-reports/
+
+      - name: Upload ExtentReports and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: extent-reports-${{ matrix.browser }}
+          path: |
+            reports/
+            screenshots/
+          if-no-files-found: ignore
