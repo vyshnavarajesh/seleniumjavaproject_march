@@ -72,7 +72,7 @@ public class CheckoutStepOneAndTwoTests extends BaseTest {
 		SoftAssert soft = new SoftAssert();
 		
 		soft.assertTrue(getDriver().getCurrentUrl().contains("cart.html"),"User on cart Page");
-		soft.assertEquals(getPages().getCartPage().getCartCountFromBadge(),2,"Cart count should have 2");
+		soft.assertEquals(getPages().getCartPage().getCartCountFromBadge(),Integer.valueOf(2),"Cart count should have 2");
 		
 		soft.assertAll();
 	}
@@ -86,7 +86,7 @@ public class CheckoutStepOneAndTwoTests extends BaseTest {
 		SoftAssert soft = new SoftAssert();
 		
 		soft.assertTrue(getDriver().getCurrentUrl().contains("checkout-step-two.html"),"User on cart step two Page");
-		soft.assertEquals(checkoutPage.getOverviewItems().size(),2,"Cart count should have 2");
+		soft.assertEquals(checkoutPage.getOverviewItems().size(),Integer.valueOf(2),"Cart count should have 2");
 		soft.assertTrue(checkoutPage.getPaymentInfo().contains(TestData.PaymentInfo));
 		soft.assertTrue(checkoutPage.getShippingInfo().contains(TestData.shippingInfo));
 		soft.assertAll();
