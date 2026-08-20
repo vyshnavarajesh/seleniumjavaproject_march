@@ -27,7 +27,7 @@
 				<configuration>
 					<!-- Optional parameters to filter tests -->
 					<suiteXmlFiles>
-						<suiteXmlFile>./testng-suites/testng.xml</suiteXmlFile>
+						<suiteXmlFile>${project.basedir}/testng-suites/testng.xml</suiteXmlFile>
 						<!--suiteXmlFile>${suiteFileName}</suiteXmlFile-->
 					</suiteXmlFiles>
 				</configuration>

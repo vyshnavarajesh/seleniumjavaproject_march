@@ -13,6 +13,15 @@ public final class TestData {
     public static final String BACKPACK = "Sauce Labs Backpack";
     public static final String BIKE_LIGHT = "Sauce Labs Bike Light";
     public static final String BOLT = "Sauce Labs Bolt T-Shirt";
+    
+
+    public static final String  checkout_firstName_errorMessage = "Error: First Name is required";
+    public static final String checkout_lastName_errorMessage = "Error: Last Name is required";
+    public static final String  checkout_PostalCode_errorMessage = "Error: Postal Code is required";
+    
+    public static final String PaymentInfo = "SauceCard #31337";
+    public static final String shippingInfo = "Free Pony Express Delivery!";
+
 
     public static final String FIRST_NAME = "John";
     public static final String LAST_NAME = "Doe";

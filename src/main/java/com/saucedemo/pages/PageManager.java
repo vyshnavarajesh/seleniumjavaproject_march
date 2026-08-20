@@ -27,7 +27,7 @@ public class PageManager {
         return inventoryPage;
     }
 
-    public CartPage getCarPage() {
+    public CartPage getCartPage() {
         if (cartPage == null) {
         	cartPage = new CartPage(driver);
         }

@@ -1,17 +1,24 @@
 package com.saucedemo.pages;
 
 import com.saucedemo.core.ProductDetails;
+import com.saucedemo.testdata.TestData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
+
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InventoryPage extends BasePage {
 
-
+    // =============================================
+    // Locators
+    // =============================================
     private final By inventoryItems = By.cssSelector(".inventory_item");
     private final By cartBadge = By.cssSelector(".shopping_cart_badge");
     private final By cartLink = By.cssSelector(".shopping_cart_link");
@@ -27,23 +34,87 @@ public class InventoryPage extends BasePage {
     private final By productDetailContainer = By.cssSelector(".inventory_details_desc_container");
     private final By backToProductsButton = By.id("back-to-products");
 
+    private static final Map<String, String> ADD_TO_CART_DATA_TEST = new HashMap<>();
+    private static final Map<String, String> REMOVE_FROM_CART_DATA_TEST = new HashMap<>();
 
+    static {
+       
+        List<String> productNames = TestData.PRODUCT_NAMES;
+
+        List<String> addDataTestIds = Arrays.asList(
+                "add-to-cart-sauce-labs-backpack",
+                "add-to-cart-sauce-labs-bike-light",
+                "add-to-cart-sauce-labs-bolt-t-shirt",
+                "add-to-cart-sauce-labs-fleece-jacket",
+                "add-to-cart-sauce-labs-onesie",
+                "add-to-cart-test.allthethings()-t-shirt-(red)"
+        );
+
+        if (productNames.size() != addDataTestIds.size()) {
+            throw new IllegalStateException("Product names and data-test IDs count mismatch");
+        }
+
+        for (int i = 0; i < productNames.size(); i++) {
+            String name = productNames.get(i);
+            String addId = addDataTestIds.get(i);
+            ADD_TO_CART_DATA_TEST.put(name, addId);
+            REMOVE_FROM_CART_DATA_TEST.put(name, addId.replace("add-to-cart-", "remove-"));
+        }
+    }
+
+  
     public InventoryPage(WebDriver driver) {
         super(driver);
     }
 
- 
+    private String getAddToCartDataTest(String productName) {
+        String dataTest = ADD_TO_CART_DATA_TEST.get(productName);
+        if (dataTest == null) {
+            throw new IllegalArgumentException("No data-test mapping found for product: " + productName);
+        }
+        return dataTest;
+    }
+
+    private String getRemoveFromCartDataTest(String productName) {
+        String dataTest = REMOVE_FROM_CART_DATA_TEST.get(productName);
+        if (dataTest == null) {
+            throw new IllegalArgumentException("No data-test mapping found for product: " + productName);
+        }
+        return dataTest;
+    }
+
+    public void addProductToCart(String productName) {
+        String dataTestId = getAddToCartDataTest(productName);
+        By buttonLocator = By.cssSelector("button[data-test='" + dataTestId + "']");
+        driver.findElement(buttonLocator).click();
+    }
+
+    public void removeProductFromCart(String productName) {
+        String dataTestId = getRemoveFromCartDataTest(productName);
+        By buttonLocator = By.cssSelector("button[data-test='" + dataTestId + "']");
+        driver.findElement(buttonLocator).click();
+    }
+
+    public Integer getCartCount() {
+        List<WebElement> badges = driver.findElements(cartBadge);
+        return badges.isEmpty() ? null : Integer.parseInt(badges.get(0).getText().trim());
+    }
+
+    public void openCart() {
+        clickable(cartLink).click();
+    }
+
+    public boolean isCartIconVisible() {
+        return visible(cartIcon).isDisplayed();
+    }
+
+
     public ProductDetails getProductDetails(String productName) {
         WebElement product = findProduct(productName);
         String name = product.findElement(By.cssSelector(".inventory_item_name")).getText().trim();
         String description = product.findElement(By.cssSelector(".inventory_item_desc")).getText().trim();
         String price = product.findElement(By.cssSelector(".inventory_item_price")).getText().trim();
         return new ProductDetails(name, description, price);
-    }
-
-    public void addProductToCart(String productName) {
-        WebElement product = findProduct(productName);
-        product.findElement(By.cssSelector("button.btn_inventory")).click();
     }
 
     public String getPageTitleText() {
@@ -69,19 +140,6 @@ public class InventoryPage extends BasePage {
         return prices;
     }
 
-    public Integer getCartCount() {
-        List<WebElement> badges = driver.findElements(cartBadge);
-        return badges.isEmpty() ? null : Integer.parseInt(badges.get(0).getText().trim());
-    }
-
-    public void openCart() {
-        clickable(cartLink).click();
-    }
-
-    public boolean isCartIconVisible() {
-        return visible(cartIcon).isDisplayed();
-    }
-
     public void sortByNameZA() {
         new Select(visible(sortDropdown)).selectByValue("za");
     }
@@ -94,7 +152,7 @@ public class InventoryPage extends BasePage {
         new Select(visible(sortDropdown)).selectByValue("hilo");
     }
 
-
+ 
     public void clickProductImageByIndex(int index) {
         List<WebElement> images = driver.findElements(By.cssSelector(".inventory_item_img img"));
         if (index < 0 || index >= images.size()) {
@@ -135,9 +193,9 @@ public class InventoryPage extends BasePage {
         clickable(logoutLink).click();
     }
 
-
+  
     private WebElement findProduct(String productName) {
-        List<WebElement> products = allVisible(inventoryItems);
+        List<WebElement> products = driver.findElements(inventoryItems);
         return products.stream()
                 .filter(item -> item.findElement(By.cssSelector(".inventory_item_name"))
                         .getText().trim().equals(productName))

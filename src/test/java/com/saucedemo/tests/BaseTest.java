@@ -13,7 +13,7 @@ public abstract class BaseTest {
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
     private static final ThreadLocal<PageManager> pageManagerThreadLocal = new ThreadLocal<>();
 
-    protected WebDriver getDriver() {
+    public static WebDriver getDriver() {
         return driverThreadLocal.get();
     }
 
