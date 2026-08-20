@@ -7,9 +7,9 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.saucedemo.pages.LoginPage;
 import com.saucedemo.pages.CartPage;
 import com.saucedemo.pages.InventoryPage;
+import com.saucedemo.pages.LoginPage;
 import com.saucedemo.testdata.TestData;
 
 public class CartManagementTests  extends BaseTest{
@@ -75,16 +75,17 @@ public class CartManagementTests  extends BaseTest{
 		
 		org.testng.asserts.SoftAssert soft = new 	org.testng.asserts.SoftAssert();
 		
-		soft.assertEquals(inventoryPage.getCartCount(), Integer.valueOf(productsToAdd.size()),"cart count mismatch");
+		soft.assertEquals(Integer.valueOf(cartPage.getCartItemCount()), Integer.valueOf(productsToAdd.size()),"cart count mismatch");
 		
 		inventoryPage.openCart();
 		cartPage = getPages().getCartPage();
 		soft.assertEquals(cartPage.getPageTitleText(),"Your Cart","cart page title mismatch");
-		soft.assertEquals(cartPage.getCartItemCount(),Integer.valueOf(productsToAdd.size()),"cart count mismatch in cart Page");
+		soft.assertEquals(Integer.valueOf(cartPage.getCartItemCount()), Integer.valueOf(productsToAdd.size()),"cart count mismatch in cart Page");
 		
 		cartPage.proceedToCheckout();
 		soft.assertEquals(cartPage.getPageTitleText(),"Checkout: Your Information","checkout stepone page title mismatch");
 		soft.assertAll();
+		
 		
 //		Assert.assertEquals(inventoryPage.getPageTitleText(), "Products");
 //		inventoryPage.addProductToCart(TestData.BACKPACK);

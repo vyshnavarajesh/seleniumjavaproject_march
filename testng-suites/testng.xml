@@ -9,7 +9,7 @@
         <classes>
             <!--class name="com.saucedemo.tests.LoginAuthenticationTests"/-->
              <!--class name="com.saucedemo.tests.InventoryTests"/-->
-             <!--class name="com.saucedemo.tests.CartManagementTests"/-->
+             <class name="com.saucedemo.tests.CartManagementTests"/>
              <class name="com.saucedemo.tests.CheckoutStepOneAndTwoTests"/>
              
         </classes>
