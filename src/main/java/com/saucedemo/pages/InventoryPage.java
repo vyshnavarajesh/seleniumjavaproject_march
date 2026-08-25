@@ -13,6 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import java.time.Duration;
 
 public class InventoryPage extends BasePage {
 
@@ -83,6 +86,7 @@ public class InventoryPage extends BasePage {
         return dataTest;
     }
 
+    /*
     public void addProductToCart(String productName) {
         String dataTestId = getAddToCartDataTest(productName);
         By buttonLocator = By.cssSelector("button[data-test='" + dataTestId + "']");
@@ -93,11 +97,36 @@ public class InventoryPage extends BasePage {
         String dataTestId = getRemoveFromCartDataTest(productName);
         By buttonLocator = By.cssSelector("button[data-test='" + dataTestId + "']");
         driver.findElement(buttonLocator).click();
+    }*/
+    
+    public void addProductToCart(String productName) {
+        String dataTestId = getAddToCartDataTest(productName);
+        By buttonLocator = By.cssSelector("button[data-test='" + dataTestId + "']");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(buttonLocator));
+        button.click();
+        // Wait for cart badge to update (optional)
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cartBadge));
+    }
+
+    public void removeProductFromCart(String productName) {
+        String dataTestId = getRemoveFromCartDataTest(productName);
+        By buttonLocator = By.cssSelector("button[data-test='" + dataTestId + "']");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        WebElement button = wait.until(ExpectedConditions.elementToBeClickable(buttonLocator));
+        button.click();
+        // Wait for cart badge to disappear or update
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(cartBadge));
     }
 
     public Integer getCartCount() {
         List<WebElement> badges = driver.findElements(cartBadge);
         return badges.isEmpty() ? null : Integer.parseInt(badges.get(0).getText().trim());
+    }
+    
+    public void waitForInventoryPageLoaded() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(inventoryItems));
     }
 
     public void openCart() {

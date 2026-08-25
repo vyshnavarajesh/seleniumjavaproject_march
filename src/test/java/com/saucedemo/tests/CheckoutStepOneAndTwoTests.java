@@ -18,7 +18,7 @@ public class CheckoutStepOneAndTwoTests extends BaseTest {
 	private CheckoutPage checkoutPage;
 
 	@BeforeMethod
-	public void login() {
+	public void loginAndCheckOut() {
 		loginPage = getPages().getLoginPage();
 		loginPage.login(TestData.STANDARD_USER, TestData.PASSWORD);
 		bookingflow = new CheckoutFlows(getPages());

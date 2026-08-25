@@ -23,6 +23,7 @@ public class CartManagementTests  extends BaseTest{
 		loginPage = getPages().getLoginPage();
 		loginPage.login(TestData.STANDARD_USER, TestData.PASSWORD);
 		inventoryPage = getPages().getInventoryPage();
+		inventoryPage.waitForInventoryPageLoaded();
 	}
 	
 	

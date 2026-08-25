@@ -7,10 +7,11 @@
     </listeners>
     <test name="Parallel Tests">
         <classes>
-            <!--class name="com.saucedemo.tests.LoginAuthenticationTests"/-->
-             <!--class name="com.saucedemo.tests.InventoryTests"/-->
+            <class name="com.saucedemo.tests.LoginAuthenticationTests"/>
+             <class name="com.saucedemo.tests.InventoryTests"/>
              <class name="com.saucedemo.tests.CartManagementTests"/>
              <class name="com.saucedemo.tests.CheckoutStepOneAndTwoTests"/>
+             <class name="com.saucedemo.tests.CheckOutCompletionTests"/>
              
         </classes>
     </test>
